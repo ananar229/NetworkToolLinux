@@ -1,4 +1,5 @@
 #include "src/MainWindow.h"
+#include "src/common/LanguageManager.h"
 
 #include <QApplication>
 
@@ -9,9 +10,12 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("NetworkTool");
     app.setApplicationVersion(QStringLiteral(NETWORKTOOL_VERSION));
 
+    LanguageManager::installTranslators(LanguageManager::currentLanguageCode());
+
     MainWindow window;
     window.show();
 
     return app.exec();
 }
+
 

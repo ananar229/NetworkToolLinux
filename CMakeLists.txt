@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Network LinguistTools)
 
 add_executable(NetworkTool
     main.cpp
@@ -15,6 +15,10 @@ add_executable(NetworkTool
     src/MainWindow.cpp
     src/AboutDialog.h
     src/AboutDialog.cpp
+    src/SettingsDialog.h
+    src/SettingsDialog.cpp
+    src/common/LanguageManager.h
+    src/common/LanguageManager.cpp
     src/common/CommandRunner.h
     src/common/CommandRunner.cpp
     src/common/OutputConsole.h
@@ -47,3 +51,13 @@ add_executable(NetworkTool
 
 target_link_libraries(NetworkTool PRIVATE Qt6::Widgets Qt6::Network)
 target_compile_definitions(NetworkTool PRIVATE NETWORKTOOL_VERSION="${PROJECT_VERSION}")
+
+qt6_add_translations(NetworkTool
+    TS_FILES
+        translations/NetworkTool_de.ts
+        translations/NetworkTool_en.ts
+        translations/NetworkTool_fr.ts
+        translations/NetworkTool_it.ts
+        translations/NetworkTool_es.ts
+    RESOURCE_PREFIX "/i18n"
+)

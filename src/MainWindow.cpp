@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include "AboutDialog.h"
+#include "SettingsDialog.h"
 #include "tabs/FingerTab.h"
 #include "tabs/InfoTab.h"
 #include "tabs/LookupTab.h"
@@ -271,6 +272,14 @@ void MainWindow::setupMenuBar() {
     });
 
     auto *helpMenu = menuBar()->addMenu(tr("Hilfe"));
+
+    QAction *settingsAction = helpMenu->addAction(tr("Einstellungen"));
+    connect(settingsAction, &QAction::triggered, this, [this] {
+        SettingsDialog dialog(this);
+        dialog.exec();
+    });
+
+    helpMenu->addSeparator();
 
     QAction *helpAction = helpMenu->addAction(tr("Hilfe"));
     helpAction->setShortcut(QKeySequence::HelpContents);

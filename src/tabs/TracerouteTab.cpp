@@ -32,6 +32,7 @@ TracerouteTab::TracerouteTab(QWidget *parent) : QWidget(parent) {
     m_tracer = new NativeTraceroute(this);
     connect(m_tracer, &NativeTraceroute::hopResult, this, &TracerouteTab::onHopResult);
     connect(m_tracer, &NativeTraceroute::reachedDestination, this, &TracerouteTab::onReachedDestination);
+    connect(m_tracer, &NativeTraceroute::fallingBackToTcp, this, &TracerouteTab::onFallingBackToTcp);
     connect(m_tracer, &NativeTraceroute::finished, this, &TracerouteTab::onFinished);
     connect(m_tracer, &NativeTraceroute::errorOccurred, this, &TracerouteTab::onErrorOccurred);
     connect(m_actionButton, &QPushButton::clicked, this, &TracerouteTab::toggle);
@@ -75,6 +76,11 @@ void TracerouteTab::onHopResult(int ttl, const QString &address, int rttMs) {
 
 void TracerouteTab::onReachedDestination() {
     m_output->appendNotice(tr("Destination reached.\n"));
+}
+
+void TracerouteTab::onFallingBackToTcp() {
+    m_output->appendNotice(
+        tr("No ICMP replies at all; retrying with TCP probes on port 443...\n"));
 }
 
 void TracerouteTab::onErrorOccurred(const QString &message) {

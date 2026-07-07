@@ -20,6 +20,7 @@ private slots:
     void onFinished();
     void onHopResult(int ttl, const QString &address, int rttMs);
     void onReachedDestination();
+    void onFallingBackToTcp();
     void onErrorOccurred(const QString &message);
 
 private:
