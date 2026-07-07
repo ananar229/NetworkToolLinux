@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 
+#include "AboutDialog.h"
 #include "tabs/FingerTab.h"
 #include "tabs/InfoTab.h"
 #include "tabs/LookupTab.h"
@@ -10,11 +11,20 @@
 #include "tabs/TracerouteTab.h"
 #include "tabs/WhoisTab.h"
 
+#include <QAction>
+#include <QApplication>
 #include <QButtonGroup>
 #include <QFrame>
 #include <QHBoxLayout>
+#include <QKeySequence>
+#include <QLineEdit>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QPlainTextEdit>
 #include <QStackedWidget>
 #include <QStyle>
+#include <QTextCursor>
 #include <QToolButton>
 #include <QVBoxLayout>
 #include <iterator>
@@ -38,11 +48,47 @@ constexpr TabSpec kTabSpecs[] = {
     {"Speed", QStyle::SP_MediaSeekForward},
 };
 
+enum class EditOp { Undo, Redo, Cut, Copy, Paste, Delete, SelectAll };
+
+// Edit-menu actions apply to whichever text field currently has focus,
+// since the app has no single central document to edit.
+void invokeEditOp(EditOp op) {
+    QWidget *focused = QApplication::focusWidget();
+    if (auto *lineEdit = qobject_cast<QLineEdit *>(focused)) {
+        switch (op) {
+            case EditOp::Undo: lineEdit->undo(); break;
+            case EditOp::Redo: lineEdit->redo(); break;
+            case EditOp::Cut: lineEdit->cut(); break;
+            case EditOp::Copy: lineEdit->copy(); break;
+            case EditOp::Paste: lineEdit->paste(); break;
+            case EditOp::Delete: lineEdit->del(); break;
+            case EditOp::SelectAll: lineEdit->selectAll(); break;
+        }
+    } else if (auto *textEdit = qobject_cast<QPlainTextEdit *>(focused)) {
+        switch (op) {
+            case EditOp::Undo: textEdit->undo(); break;
+            case EditOp::Redo: textEdit->redo(); break;
+            case EditOp::Cut: textEdit->cut(); break;
+            case EditOp::Copy: textEdit->copy(); break;
+            case EditOp::Paste: textEdit->paste(); break;
+            case EditOp::Delete: {
+                QTextCursor cursor = textEdit->textCursor();
+                cursor.removeSelectedText();
+                textEdit->setTextCursor(cursor);
+                break;
+            }
+            case EditOp::SelectAll: textEdit->selectAll(); break;
+        }
+    }
+}
+
 } // namespace
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle(tr("Network Tool"));
     resize(720, 560);
+
+    setupMenuBar();
 
     auto *central = new QWidget(this);
     auto *outerLayout = new QVBoxLayout(central);
@@ -162,4 +208,84 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
             background-color: palette(base);
         }
     )");
+}
+
+void MainWindow::setupMenuBar() {
+    auto *fileMenu = menuBar()->addMenu(tr("Ablage"));
+
+    QAction *newWindowAction = fileMenu->addAction(tr("Neues Fenster"));
+    newWindowAction->setShortcut(QKeySequence::New);
+    connect(newWindowAction, &QAction::triggered, this, [] {
+        auto *window = new MainWindow();
+        window->setAttribute(Qt::WA_DeleteOnClose);
+        window->show();
+    });
+
+    QAction *closeAction = fileMenu->addAction(tr("Schliessen"));
+    closeAction->setShortcut(QKeySequence::Close);
+    connect(closeAction, &QAction::triggered, this, &QWidget::close);
+
+    auto *editMenu = menuBar()->addMenu(tr("Bearbeiten"));
+
+    QAction *undoAction = editMenu->addAction(tr("Widerrufen"));
+    undoAction->setShortcut(QKeySequence::Undo);
+    connect(undoAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Undo); });
+
+    QAction *redoAction = editMenu->addAction(tr("Wiederholen"));
+    redoAction->setShortcut(QKeySequence::Redo);
+    connect(redoAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Redo); });
+
+    editMenu->addSeparator();
+
+    QAction *cutAction = editMenu->addAction(tr("Ausschneiden"));
+    cutAction->setShortcut(QKeySequence::Cut);
+    connect(cutAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Cut); });
+
+    QAction *copyAction = editMenu->addAction(tr("Kopieren"));
+    copyAction->setShortcut(QKeySequence::Copy);
+    connect(copyAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Copy); });
+
+    QAction *pasteAction = editMenu->addAction(tr("Einfügen"));
+    pasteAction->setShortcut(QKeySequence::Paste);
+    connect(pasteAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Paste); });
+
+    QAction *deleteAction = editMenu->addAction(tr("Löschen"));
+    deleteAction->setShortcut(QKeySequence::Delete);
+    connect(deleteAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::Delete); });
+
+    QAction *selectAllAction = editMenu->addAction(tr("Alles Auswählen"));
+    selectAllAction->setShortcut(QKeySequence::SelectAll);
+    connect(selectAllAction, &QAction::triggered, this, [] { invokeEditOp(EditOp::SelectAll); });
+
+    auto *viewMenu = menuBar()->addMenu(tr("Darstellung"));
+
+    QAction *fullscreenAction = viewMenu->addAction(tr("Vollbildmodus"));
+    fullscreenAction->setCheckable(true);
+    fullscreenAction->setShortcut(QKeySequence::FullScreen);
+    connect(fullscreenAction, &QAction::toggled, this, [this](bool checked) {
+        if (checked) {
+            showFullScreen();
+        } else {
+            showNormal();
+        }
+    });
+
+    auto *helpMenu = menuBar()->addMenu(tr("Hilfe"));
+
+    QAction *helpAction = helpMenu->addAction(tr("Hilfe"));
+    helpAction->setShortcut(QKeySequence::HelpContents);
+    connect(helpAction, &QAction::triggered, this, [this] {
+        QMessageBox::information(
+            this, tr("Hilfe"),
+            tr("Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, "
+               "Traceroute, Whois, Finger, Port Scan, Speed), gib die benötigten Angaben "
+               "ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe erscheint "
+               "im Textfeld darunter."));
+    });
+
+    QAction *aboutAction = helpMenu->addAction(tr("Über"));
+    connect(aboutAction, &QAction::triggered, this, [this] {
+        AboutDialog dialog(this);
+        dialog.exec();
+    });
 }

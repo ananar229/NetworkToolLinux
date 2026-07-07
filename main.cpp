@@ -7,9 +7,11 @@ int main(int argc, char *argv[]) {
     app.setApplicationName("Network Tool");
     app.setApplicationDisplayName("Network Tool");
     app.setOrganizationName("NetworkTool");
+    app.setApplicationVersion(QStringLiteral(NETWORKTOOL_VERSION));
 
     MainWindow window;
     window.show();
 
     return app.exec();
 }
+

@@ -14,5 +14,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
 private:
+    void setupMenuBar();
+
     QStackedWidget *m_stack;
 };

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(NetworkTool)
+project(NetworkTool VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,6 +13,8 @@ add_executable(NetworkTool
     main.cpp
     src/MainWindow.h
     src/MainWindow.cpp
+    src/AboutDialog.h
+    src/AboutDialog.cpp
     src/common/CommandRunner.h
     src/common/CommandRunner.cpp
     src/common/OutputConsole.h
@@ -44,3 +46,4 @@ add_executable(NetworkTool
 )
 
 target_link_libraries(NetworkTool PRIVATE Qt6::Widgets Qt6::Network)
+target_compile_definitions(NetworkTool PRIVATE NETWORKTOOL_VERSION="${PROJECT_VERSION}")
