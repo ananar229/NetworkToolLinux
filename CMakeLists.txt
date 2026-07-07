@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.16)
+project(NetworkTool)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+
+find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
+
+add_executable(NetworkTool
+    main.cpp
+    src/MainWindow.h
+    src/MainWindow.cpp
+    src/common/CommandRunner.h
+    src/common/CommandRunner.cpp
+    src/common/OutputConsole.h
+    src/common/OutputConsole.cpp
+    src/common/WhoisClient.h
+    src/common/WhoisClient.cpp
+    src/common/NativeTraceroute.h
+    src/common/NativeTraceroute.cpp
+    src/common/ProcNetInfo.h
+    src/common/ProcNetInfo.cpp
+    src/tabs/InfoTab.h
+    src/tabs/InfoTab.cpp
+    src/tabs/NetstatTab.h
+    src/tabs/NetstatTab.cpp
+    src/tabs/PingTab.h
+    src/tabs/PingTab.cpp
+    src/tabs/LookupTab.h
+    src/tabs/LookupTab.cpp
+    src/tabs/TracerouteTab.h
+    src/tabs/TracerouteTab.cpp
+    src/tabs/WhoisTab.h
+    src/tabs/WhoisTab.cpp
+    src/tabs/FingerTab.h
+    src/tabs/FingerTab.cpp
+    src/tabs/PortScanTab.h
+    src/tabs/PortScanTab.cpp
+    src/tabs/SpeedTestTab.h
+    src/tabs/SpeedTestTab.cpp
+)
+
+target_link_libraries(NetworkTool PRIVATE Qt6::Widgets Qt6::Network)
