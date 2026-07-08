@@ -177,16 +177,19 @@ void NativeTraceroute::sendIcmpProbe() {
 
     ::setsockopt(m_fd, IPPROTO_IP, IP_TTL, &m_ttl, sizeof(m_ttl));
 
+    // 8-byte ICMP header + 12-byte payload = 20 bytes, plus the 20-byte IPv4
+    // header, matches the classic 40-byte default probe size used by BSD/macOS
+    // traceroute (there just as a UDP datagram of the same total length).
     struct {
         IcmpEchoHeader header;
-        char payload[8];
+        char payload[12];
     } packet{};
     packet.header.type = kIcmpEchoRequest;
     packet.header.code = 0;
     packet.header.checksum = 0;
     packet.header.id = htons(1);
     packet.header.sequence = htons(static_cast<quint16>(m_ttl));
-    memcpy(packet.payload, "NetTrace", sizeof(packet.payload));
+    memcpy(packet.payload, "NetworkTool!", sizeof(packet.payload));
     packet.header.checksum = htons(internetChecksum(&packet, sizeof(packet)));
 
     sockaddr_in dest{};
@@ -323,33 +326,41 @@ void NativeTraceroute::onTcpActivity() {
         return;
     }
 
-    // A non-blocking connect() only finalizes (succeeds or fails) once the
-    // fd becomes writable; ignore read/exception-only wakeups here.
-    if (sender() != m_writeNotifier) {
-        return;
-    }
-
+    // No error queued. SO_ERROR == 0 is ambiguous — it also reads 0 while
+    // the connect() is still pending, and the write notifier can fire
+    // spuriously here (epoll reports EPOLLOUT alongside EPOLLERR for
+    // sockets that just got an ICMP notification queued, even though the
+    // connection itself hasn't resolved). getpeername() only succeeds once
+    // the handshake has actually completed, so use that to disambiguate.
     int socketError = 0;
     socklen_t socketErrorLen = sizeof(socketError);
     ::getsockopt(m_fd, SOL_SOCKET, SO_ERROR, &socketError, &socketErrorLen);
 
-    const qint64 elapsedMs = m_probeTimer.elapsed();
-    m_timeoutTimer->stop();
-
-    if (socketError == 0 || socketError == ECONNREFUSED) {
-        // A completed SYN-ACK handshake or an RST both prove the packet
-        // reached the destination itself.
-        m_anyHopResolved = true;
-        emit hopResult(m_ttl, m_destination.toString(), static_cast<int>(elapsedMs));
-        m_running = false;
-        closeSocket();
-        emit reachedDestination();
-        emit finished();
+    bool reached = false;
+    if (socketError == ECONNREFUSED) {
+        reached = true; // an RST also proves the destination itself answered
+    } else if (socketError == 0) {
+        sockaddr_in peer{};
+        socklen_t peerLen = sizeof(peer);
+        if (::getpeername(m_fd, reinterpret_cast<sockaddr *>(&peer), &peerLen) != 0) {
+            return; // still connecting; keep waiting for the real completion
+        }
+        reached = true;
+    } else {
+        m_timeoutTimer->stop();
+        emit hopResult(m_ttl, QString(), -1);
+        advanceOrFinish();
         return;
     }
 
-    emit hopResult(m_ttl, QString(), -1);
-    advanceOrFinish();
+    const qint64 elapsedMs = m_probeTimer.elapsed();
+    m_timeoutTimer->stop();
+    m_anyHopResolved = true;
+    emit hopResult(m_ttl, m_destination.toString(), static_cast<int>(elapsedMs));
+    m_running = false;
+    closeSocket();
+    emit reachedDestination();
+    emit finished();
 }
 
 void NativeTraceroute::onTimeout() {

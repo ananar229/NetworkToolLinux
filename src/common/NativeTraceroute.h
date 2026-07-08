@@ -33,7 +33,7 @@ public:
     explicit NativeTraceroute(QObject *parent = nullptr);
     ~NativeTraceroute() override;
 
-    void start(const QString &host, int maxHops = 30, int timeoutMs = 2000);
+    void start(const QString &host, int maxHops = 64, int timeoutMs = 2000);
     void stop();
     bool isRunning() const { return m_running; }
 
@@ -73,7 +73,7 @@ private:
     QElapsedTimer m_probeTimer;
     QHostAddress m_destination;
     int m_ttl = 1;
-    int m_maxHops = 30;
+    int m_maxHops = 64;
     int m_timeoutMs = 2000;
     bool m_running = false;
 };

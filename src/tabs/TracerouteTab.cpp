@@ -51,7 +51,7 @@ void TracerouteTab::toggle() {
     }
 
     m_output->clear();
-    m_output->appendNotice(tr("Tracing route to %1, 30 hops max:\n").arg(address));
+    m_output->appendNotice(tr("Tracing route to %1, 64 hops max, 40 byte packets:\n").arg(address));
     onStarted();
     m_tracer->start(address);
 }
