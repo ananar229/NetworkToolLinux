@@ -61,7 +61,7 @@ echo "==> Deploying base executable + desktop file + icon"
 "$LINUXDEPLOY" --appdir "$APPDIR" \
     --executable "$APPDIR/usr/bin/NetworkTool" \
     --desktop-file "$APPDIR/usr/share/applications/networktool.desktop" \
-    --icon-file "$APPDIR/usr/share/icons/hicolor/256x256/apps/networktool.png"
+    --icon-file "$APPDIR/usr/share/icons/hicolor/512x512/apps/networktool.png"
 
 echo "==> Deploying Qt runtime (platform plugins, imageformats, translations)"
 QMAKE="${QMAKE:-/usr/bin/qmake6}" "$LINUXDEPLOY_QT" --appdir "$APPDIR" \
@@ -73,7 +73,7 @@ echo "==> Resolving dependencies of newly added Qt plugins + stripping"
 "$LINUXDEPLOY" --appdir "$APPDIR" \
     --executable "$APPDIR/usr/bin/NetworkTool" \
     --desktop-file "$APPDIR/usr/share/applications/networktool.desktop" \
-    --icon-file "$APPDIR/usr/share/icons/hicolor/256x256/apps/networktool.png" \
+    --icon-file "$APPDIR/usr/share/icons/hicolor/512x512/apps/networktool.png" \
     --deploy-deps-only="$APPDIR/usr/plugins"
 
 echo "==> Packaging AppImage"

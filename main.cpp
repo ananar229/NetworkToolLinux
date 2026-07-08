@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     app.setApplicationVersion(QStringLiteral(NETWORKTOOL_VERSION));
 
     QIcon appIcon;
-    for (int size : {16, 32, 48, 64, 128, 256, 512}) {
+    for (int size : {16, 32, 48, 64, 128, 256, 512, 1024}) {
         appIcon.addFile(QStringLiteral(":/icons/networktool_%1.png").arg(size), QSize(size, size));
     }
     app.setWindowIcon(appIcon);

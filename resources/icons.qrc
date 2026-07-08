@@ -7,5 +7,6 @@
         <file alias="networktool_128.png">icons/networktool_128.png</file>
         <file alias="networktool_256.png">icons/networktool_256.png</file>
         <file alias="networktool_512.png">icons/networktool_512.png</file>
+        <file alias="networktool_1024.png">icons/networktool_1024.png</file>
     </qresource>
 </RCC>

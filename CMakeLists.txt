@@ -80,5 +80,5 @@ install(FILES resources/icons/networktool_256.png
     DESTINATION share/icons/hicolor/256x256/apps RENAME networktool.png)
 install(FILES resources/icons/networktool_512.png
     DESTINATION share/icons/hicolor/512x512/apps RENAME networktool.png)
-install(FILES resources/icons/networktool.svg
-    DESTINATION share/icons/hicolor/scalable/apps RENAME networktool.svg)
+install(FILES resources/icons/networktool_1024.png
+    DESTINATION share/icons/hicolor/1024x1024/apps RENAME networktool.png)
