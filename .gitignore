@@ -1,4 +1,7 @@
 cmake-build-*/
 build/
+build-release/
+dist/
 .idea/
 .claude/
+packaging/.tools/

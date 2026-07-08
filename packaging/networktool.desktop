@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Network Tool
+GenericName=Network Diagnostics
+Comment=Ping, traceroute, whois, port scan and more network utilities
+Exec=NetworkTool
+Icon=networktool
+Categories=Network;
+Terminal=false
+StartupWMClass=NetworkTool

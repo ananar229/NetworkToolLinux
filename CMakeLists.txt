@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets Network LinguistTools)
 
@@ -47,6 +48,7 @@ add_executable(NetworkTool
     src/tabs/PortScanTab.cpp
     src/tabs/SpeedTestTab.h
     src/tabs/SpeedTestTab.cpp
+    resources/icons.qrc
 )
 
 target_link_libraries(NetworkTool PRIVATE Qt6::Widgets Qt6::Network)
@@ -61,3 +63,22 @@ qt6_add_translations(NetworkTool
         translations/NetworkTool_es.ts
     RESOURCE_PREFIX "/i18n"
 )
+
+install(TARGETS NetworkTool RUNTIME DESTINATION bin)
+install(FILES packaging/networktool.desktop DESTINATION share/applications)
+install(FILES resources/icons/networktool_16.png
+    DESTINATION share/icons/hicolor/16x16/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_32.png
+    DESTINATION share/icons/hicolor/32x32/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_48.png
+    DESTINATION share/icons/hicolor/48x48/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_64.png
+    DESTINATION share/icons/hicolor/64x64/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_128.png
+    DESTINATION share/icons/hicolor/128x128/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_256.png
+    DESTINATION share/icons/hicolor/256x256/apps RENAME networktool.png)
+install(FILES resources/icons/networktool_512.png
+    DESTINATION share/icons/hicolor/512x512/apps RENAME networktool.png)
+install(FILES resources/icons/networktool.svg
+    DESTINATION share/icons/hicolor/scalable/apps RENAME networktool.svg)

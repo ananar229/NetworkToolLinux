@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="networktool_16.png">icons/networktool_16.png</file>
+        <file alias="networktool_32.png">icons/networktool_32.png</file>
+        <file alias="networktool_48.png">icons/networktool_48.png</file>
+        <file alias="networktool_64.png">icons/networktool_64.png</file>
+        <file alias="networktool_128.png">icons/networktool_128.png</file>
+        <file alias="networktool_256.png">icons/networktool_256.png</file>
+        <file alias="networktool_512.png">icons/networktool_512.png</file>
+    </qresource>
+</RCC>
