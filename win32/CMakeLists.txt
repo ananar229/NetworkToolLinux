@@ -38,7 +38,6 @@ target_link_libraries(NetworkTool PRIVATE
     iphlpapi
     dnsapi
     winhttp
-    icmp
     gdi32
     comdlg32
 )

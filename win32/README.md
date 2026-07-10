@@ -36,6 +36,18 @@ DLLs needed alongside it).
 On real Windows with MSVC, just open the folder in CMake-aware Visual
 Studio / CLion — the toolchain file is only needed for cross-compiling.
 
+### Architecture: 32-bit by default
+
+`cmake/mingw-toolchain.cmake` builds a **32-bit (i686)** binary by default.
+This is deliberate: ReactOS's x86_64 support is still very experimental,
+while a 32-bit .exe runs fine on ReactOS, on 32-bit Windows, and on 64-bit
+Windows via WoW64 - one build covers everything. Running the 64-bit build
+on a 32-bit ReactOS/Windows install fails at launch with *"The image file
+... is valid, but is for a machine type other than the current machine"*.
+
+For a native 64-bit Windows-only build, use
+`cmake/mingw-toolchain-x86_64.cmake` instead.
+
 ## Known limitation: Speed tab under ReactOS
 
 The Speed tab uses WinHTTP over HTTPS. ReactOS's Schannel/TLS stack has
