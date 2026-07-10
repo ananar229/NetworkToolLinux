@@ -13,4 +13,9 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-static -static-libgcc -static-libstdc++")
+# Link against classic msvcrt.dll instead of this gcc's default Universal
+# CRT (api-ms-win-crt-*.dll forwarders, only present on Windows 10+) - see
+# mingw-toolchain.cmake for the full explanation.
+set(CRT_FLAGS "-mcrtdll=msvcrt-os")
+set(CMAKE_C_FLAGS_INIT "${CRT_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "${CRT_FLAGS} -static -static-libgcc -static-libstdc++")

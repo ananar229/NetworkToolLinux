@@ -18,6 +18,17 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
+# This mingw-w64-gcc defaults to linking against the Universal CRT (the
+# api-ms-win-crt-*.dll "API set" forwarder DLLs) rather than the classic
+# msvcrt.dll. Those forwarders only exist on Windows 10+ (or with the UCRT
+# redistributable installed) - launching a UCRT-linked .exe on ReactOS or
+# older Windows fails with "The procedure entry point ... could not be
+# located in ... api-ms-win-crt-*.dll". -mcrtdll=msvcrt-os links against
+# the classic msvcrt.dll instead, which every Windows version and ReactOS
+# ships.
+set(CRT_FLAGS "-mcrtdll=msvcrt-os")
+set(CMAKE_C_FLAGS_INIT "${CRT_FLAGS}")
+
 # Static-link the MinGW runtime so the .exe doesn't need libgcc/libstdc++
 # DLLs alongside it - keeps a single portable NetworkTool.exe.
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-static -static-libgcc -static-libstdc++")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "${CRT_FLAGS} -static -static-libgcc -static-libstdc++")
