@@ -48,6 +48,13 @@ PortScanTab::PortScanTab(QWidget *parent) : QWidget(parent) {
     buttonRow->addWidget(m_actionButton);
     layout->addLayout(buttonRow);
 
+    auto *warningLabel =
+        new QLabel(tr("Note: Port scanning may be restricted or illegal in some countries. Only scan "
+                       "systems you have permission to test."));
+    warningLabel->setWordWrap(true);
+    warningLabel->setStyleSheet(QStringLiteral("color: #b06a00;"));
+    layout->addWidget(warningLabel);
+
     m_output = new OutputConsole();
     layout->addWidget(m_output, 1);
 
