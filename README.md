@@ -3,6 +3,10 @@
 Ein Qt-basiertes Netzwerk-Werkzeug für Linux mit Tabs für Ping, Lookup,
 Traceroute, Whois, Finger, Netstat, Port Scan und Speedtest.
 
+Unter [`win32/`](win32/) liegt eine zweite, unabhängige Implementierung
+derselben Werkzeuge auf Basis des reinen Win32-API (kein Qt), die auch
+unter ReactOS läuft.
+
 ## Haftungsausschluss
 
 Diese Software wird ohne jegliche Garantie oder Gewährleistung

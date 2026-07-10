@@ -1,0 +1,193 @@
+#pragma once
+
+#include <windows.h>
+
+typedef enum {
+    LANG_DE = 0,
+    LANG_EN,
+    LANG_FR,
+    LANG_IT,
+    LANG_ES,
+    LANG_COUNT
+} LanguageId;
+
+typedef enum {
+    STR_MENU_FILE,
+    STR_MENU_FILE_NEW,
+    STR_MENU_FILE_CLOSE,
+    STR_MENU_EDIT,
+    STR_MENU_EDIT_UNDO,
+    STR_MENU_EDIT_REDO,
+    STR_MENU_EDIT_CUT,
+    STR_MENU_EDIT_COPY,
+    STR_MENU_EDIT_PASTE,
+    STR_MENU_EDIT_DELETE,
+    STR_MENU_EDIT_SELECTALL,
+    STR_MENU_VIEW,
+    STR_MENU_VIEW_FULLSCREEN,
+    STR_MENU_HELP,
+    STR_MENU_HELP_SETTINGS,
+    STR_MENU_HELP_HELP,
+    STR_MENU_HELP_ABOUT,
+    STR_HELP_TITLE,
+    STR_HELP_BODY,
+    STR_ABOUT_TITLE,
+    STR_ABOUT_VERSION,
+    STR_ABOUT_LICENSE,
+    STR_ABOUT_DISCLAIMER_TITLE,
+    STR_ABOUT_DISCLAIMER_BODY,
+
+    STR_INFO_SELECT,
+    STR_INFO_GROUP_IFACE,
+    STR_INFO_MAC,
+    STR_INFO_IP,
+    STR_INFO_LINKSPEED,
+    STR_INFO_LINKSTATUS,
+    STR_INFO_MTU,
+    STR_INFO_GROUP_STATS,
+    STR_INFO_RXPACKETS,
+    STR_INFO_RXERR,
+    STR_INFO_TXPACKETS,
+    STR_INFO_TXERR,
+    STR_INFO_NONE,
+    STR_INFO_NA,
+    STR_INFO_ACTIVE_OPERATIONAL,
+    STR_INFO_ACTIVE_CONNECTED,
+    STR_INFO_CONNECTING,
+    STR_INFO_INACTIVE_DISCONNECTED,
+    STR_INFO_INACTIVE_UNREACHABLE,
+    STR_INFO_INACTIVE_NONOPERATIONAL,
+    STR_INFO_UNKNOWN,
+
+    STR_NET_ROUTE,
+    STR_NET_STATS,
+    STR_NET_CONN,
+    STR_NET_BTN,
+    STR_NET_ROUTE_HEADER,
+    STR_NET_NOROUTE,
+    STR_NET_IPSTATS,
+    STR_NET_PKT_RECEIVED,
+    STR_NET_PKT_FORWARDED,
+    STR_NET_PKT_DELIVERED,
+    STR_NET_PKT_SENT,
+    STR_NET_DISCARDED,
+    STR_NET_TCPSTATS,
+    STR_NET_ACTIVE_OPENS,
+    STR_NET_PASSIVE_OPENS,
+    STR_NET_FAILED_CONN,
+    STR_NET_RESETS_SENT,
+    STR_NET_SEGMENTS_RECEIVED,
+    STR_NET_SEGMENTS_SENT,
+    STR_NET_SEGMENTS_RETRANS,
+    STR_NET_CURRENT_CONN,
+    STR_NET_UDPSTATS,
+    STR_NET_DGRAMS_RECEIVED,
+    STR_NET_NOPORT,
+    STR_NET_DGRAMS_SENT,
+    STR_NET_CONN_HEADER,
+
+    STR_PING_LABEL,
+    STR_PING_BTN,
+    STR_PING_SENDONLY,
+    STR_PING_PINGS,
+    STR_PING_STOP,
+    STR_PING_NOADDR,
+    STR_PING_NOTFOUND,
+    STR_PING_NOICMP,
+    STR_PING_TIMEDOUT,
+    STR_PING_FAILED,
+    STR_PING_REPLY,
+
+    STR_LOOKUP_LABEL,
+    STR_LOOKUP_TYPELABEL,
+    STR_LOOKUP_BTN,
+    STR_LOOKUP_NOADDR,
+    STR_LOOKUP_FAILED,
+    STR_LOOKUP_TYPE_DEFAULT,
+    STR_LOOKUP_TYPE_A,
+    STR_LOOKUP_TYPE_AAAA,
+    STR_LOOKUP_TYPE_MX,
+    STR_LOOKUP_TYPE_NS,
+    STR_LOOKUP_TYPE_TXT,
+    STR_LOOKUP_TYPE_CNAME,
+    STR_LOOKUP_TYPE_SOA,
+
+    STR_TRACE_LABEL,
+    STR_TRACE_BTN,
+    STR_TRACE_STOP,
+    STR_TRACE_NOADDR,
+    STR_TRACE_NORESOLVE,
+    STR_TRACE_NOICMP,
+    STR_TRACE_HEADER,
+    STR_TRACE_DESTREACHED,
+
+    STR_WHOIS_LABEL,
+    STR_WHOIS_SERVERLABEL,
+    STR_WHOIS_BTN,
+    STR_WHOIS_NOADDR,
+    STR_WHOIS_AUTOMATIC,
+    STR_WHOIS_QUERYING,
+
+    STR_FINGER_LABEL,
+    STR_FINGER_BTN,
+    STR_FINGER_NOADDR,
+    STR_FINGER_NOHOST,
+    STR_FINGER_CONNECTING,
+
+    STR_SCAN_LABEL,
+    STR_SCAN_BETWEEN,
+    STR_SCAN_AND,
+    STR_SCAN_BTN,
+    STR_SCAN_STOP,
+    STR_SCAN_WARNING,
+    STR_SCAN_NOADDR,
+    STR_SCAN_NORESOLVE,
+    STR_SCAN_SCANNING,
+    STR_SCAN_OPENPORT,
+    STR_SCAN_FINISHED,
+
+    STR_SPEED_INTRO,
+    STR_SPEED_PING,
+    STR_SPEED_DOWNLOAD,
+    STR_SPEED_UPLOAD,
+    STR_SPEED_READY,
+    STR_SPEED_STARTTEST,
+    STR_SPEED_STOP,
+    STR_SPEED_STARTING,
+    STR_SPEED_MEASURING,
+    STR_SPEED_TESTDOWN,
+    STR_SPEED_TESTUP,
+    STR_SPEED_COMPLETE,
+    STR_SPEED_NETERROR,
+    STR_SPEED_DASH_MS,
+    STR_SPEED_DASH_MBPS,
+
+    STR_SETTINGS_TITLE,
+    STR_SETTINGS_LANGUAGE,
+    STR_SETTINGS_CLOSE,
+    STR_SETTINGS_RESTART_TITLE,
+    STR_SETTINGS_RESTART_BODY,
+    STR_SETTINGS_SYSTEM_LANG,
+
+    STR_COUNT
+} StringId;
+
+/* Reads the saved language code from the registry (falling back to the
+ * system UI language, then English) and loads it as the active language
+ * for T() lookups. Call once at startup before creating any window. */
+void Translations_Init(void);
+
+LanguageId Translations_Current(void);
+
+/* Returns the translated string for id in the currently active language. */
+const wchar_t *T(StringId id);
+
+/* The 6 entries offered in the Settings dialog: "System language" plus the
+ * 5 explicit languages, each with its own native display name. */
+int Translations_OptionCount(void);
+const wchar_t *Translations_OptionNativeName(int index);
+const wchar_t *Translations_OptionCode(int index); /* "system","de","en","fr","it","es" */
+
+/* Persists code ("system","de","en","fr","it","es") to the registry. */
+void Translations_SaveLanguageCode(const wchar_t *code);
+void Translations_GetSavedLanguageCode(wchar_t *outCode, int outCodeSize);

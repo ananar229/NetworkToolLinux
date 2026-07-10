@@ -1,0 +1,213 @@
+#pragma code_page(65001)
+
+#include <windows.h>
+#include <commctrl.h>
+#include "../src/common/resource.h"
+
+IDI_APPICON ICON "app.ico"
+1 24 "app.manifest"
+
+/* The menu bar is built at runtime (see MainWindow.c BuildMainMenu) so its
+ * text can follow the selected UI language; only the accelerator table
+ * (whose Ctrl+letter shortcuts are language-independent) lives here. */
+IDR_ACCELERATORS ACCELERATORS
+BEGIN
+    "N", IDM_FILE_NEW, VIRTKEY, CONTROL
+    "W", IDM_FILE_CLOSE, VIRTKEY, CONTROL
+    "Z", IDM_EDIT_UNDO, VIRTKEY, CONTROL
+    "Y", IDM_EDIT_REDO, VIRTKEY, CONTROL
+    "X", IDM_EDIT_CUT, VIRTKEY, CONTROL
+    "C", IDM_EDIT_COPY, VIRTKEY, CONTROL
+    "V", IDM_EDIT_PASTE, VIRTKEY, CONTROL
+    "A", IDM_EDIT_SELECTALL, VIRTKEY, CONTROL
+    VK_F11, IDM_VIEW_FULLSCREEN, VIRTKEY
+    VK_F1, IDM_HELP_HELP, VIRTKEY
+END
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "NetworkTool"
+            VALUE "FileDescription", "Network Tool"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "NetworkTool"
+            VALUE "OriginalFilename", "NetworkTool.exe"
+            VALUE "ProductName", "Network Tool"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+/* ---------------------------------------------------------------------
+ * Tab pages. Each is a child-style dialog (no caption/border) that
+ * MainWindow creates once via CreateDialogParam and reparents under the
+ * SysTabControl32; only the active one is shown at a time. The literal
+ * text below is just a compile-time fallback - every translatable
+ * control has its own ID and gets its real text set at runtime from
+ * common/Translations.c (see each tab's WM_INITDIALOG).
+ * ------------------------------------------------------------------- */
+
+IDD_INFO DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Please select a network interface for information:", IDC_INFO_LABEL_SELECT, 8, 8, 340, 8
+    COMBOBOX        IDC_INFO_IFACE_COMBO, 8, 20, 300, 120, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    GROUPBOX        "Interface Information", IDC_INFO_GROUP_IFACE, 8, 40, 220, 140
+    LTEXT           "Hardware Address:", IDC_INFO_LABEL_MAC, 16, 56, 90, 8
+    LTEXT           "--", IDC_INFO_MAC, 112, 56, 108, 8
+    LTEXT           "IP Address(es):", IDC_INFO_LABEL_IP, 16, 70, 90, 8
+    LTEXT           "--", IDC_INFO_IP, 112, 70, 108, 8
+    LTEXT           "Link Speed:", IDC_INFO_LABEL_SPEED, 16, 84, 90, 8
+    LTEXT           "--", IDC_INFO_SPEED, 112, 84, 108, 8
+    LTEXT           "Link Status:", IDC_INFO_LABEL_STATUS, 16, 98, 90, 8
+    LTEXT           "--", IDC_INFO_STATUS, 112, 98, 108, 8
+    LTEXT           "MTU:", IDC_INFO_LABEL_MTU, 16, 112, 90, 8
+    LTEXT           "--", IDC_INFO_MTU, 112, 112, 108, 8
+
+    GROUPBOX        "Transfer Statistics", IDC_INFO_GROUP_STATS, 236, 40, 216, 140
+    LTEXT           "Packets Received:", IDC_INFO_LABEL_RXPACKETS, 244, 56, 90, 8
+    LTEXT           "--", IDC_INFO_RXPACKETS, 340, 56, 108, 8
+    LTEXT           "Receive Errors:", IDC_INFO_LABEL_RXERR, 244, 70, 90, 8
+    LTEXT           "--", IDC_INFO_RXERR, 340, 70, 108, 8
+    LTEXT           "Packets Sent:", IDC_INFO_LABEL_TXPACKETS, 244, 84, 90, 8
+    LTEXT           "--", IDC_INFO_TXPACKETS, 340, 84, 108, 8
+    LTEXT           "Send Errors:", IDC_INFO_LABEL_TXERR, 244, 98, 90, 8
+    LTEXT           "--", IDC_INFO_TXERR, 340, 98, 108, 8
+END
+
+IDD_NETSTAT DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    AUTORADIOBUTTON "Display routing table information", IDC_NET_RADIO_ROUTE, 8, 8, 340, 10, WS_GROUP
+    AUTORADIOBUTTON "Display comprehensive network statistics for each protocol", IDC_NET_RADIO_STATS, 8, 20, 340, 10
+    AUTORADIOBUTTON "Display active TCP/UDP connections", IDC_NET_RADIO_CONN, 8, 32, 340, 10
+    PUSHBUTTON      "Netstat", IDC_NET_RUN, 380, 16, 72, 14
+    EDITTEXT        IDC_NET_OUTPUT, 8, 48, 444, 224, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_PING DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter a network address to ping:", IDC_PING_LABEL_ADDR, 8, 8, 300, 8
+    EDITTEXT        IDC_PING_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    PUSHBUTTON      "Ping", IDC_PING_BTN, 380, 20, 72, 14
+    AUTOCHECKBOX    "Send only", IDC_PING_LIMIT_CHK, 8, 42, 56, 10
+    EDITTEXT        IDC_PING_COUNT, 66, 40, 40, 14, ES_NUMBER | WS_BORDER | WS_TABSTOP
+    LTEXT           "pings", IDC_PING_LABEL_PINGS, 110, 42, 40, 8
+    EDITTEXT        IDC_PING_OUTPUT, 8, 60, 444, 212, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_LOOKUP DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter an internet address to lookup:", IDC_LOOKUP_LABEL_ADDR, 8, 8, 300, 8
+    EDITTEXT        IDC_LOOKUP_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    LTEXT           "Record type:", IDC_LOOKUP_LABEL_TYPE, 8, 42, 60, 8
+    COMBOBOX        IDC_LOOKUP_TYPE, 70, 40, 150, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Lookup", IDC_LOOKUP_BTN, 380, 20, 72, 14
+    EDITTEXT        IDC_LOOKUP_OUTPUT, 8, 60, 444, 212, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_TRACEROUTE DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter a network address to traceroute:", IDC_TRACE_LABEL_ADDR, 8, 8, 300, 8
+    EDITTEXT        IDC_TRACE_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    PUSHBUTTON      "Trace", IDC_TRACE_BTN, 380, 20, 72, 14
+    EDITTEXT        IDC_TRACE_OUTPUT, 8, 40, 444, 232, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_WHOIS DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter the network address you would like to whois:", IDC_WHOIS_LABEL_ADDR, 8, 8, 300, 8
+    EDITTEXT        IDC_WHOIS_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    LTEXT           "Whois server:", IDC_WHOIS_LABEL_SERVER, 8, 42, 60, 8
+    COMBOBOX        IDC_WHOIS_SERVER, 70, 40, 200, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Whois", IDC_WHOIS_BTN, 380, 20, 72, 14
+    EDITTEXT        IDC_WHOIS_OUTPUT, 8, 60, 444, 212, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_FINGER DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter a user@host to finger (or just a host to list its users):", IDC_FINGER_LABEL_ADDR, 8, 8, 340, 8
+    EDITTEXT        IDC_FINGER_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    PUSHBUTTON      "Finger", IDC_FINGER_BTN, 380, 20, 72, 14
+    EDITTEXT        IDC_FINGER_OUTPUT, 8, 40, 444, 232, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_PORTSCAN DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter the network address you would like to scan:", IDC_SCAN_LABEL_ADDR, 8, 8, 300, 8
+    EDITTEXT        IDC_SCAN_ADDR, 8, 20, 300, 14, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP
+    LTEXT           "Only test ports between", IDC_SCAN_LABEL_BETWEEN, 8, 42, 84, 8
+    EDITTEXT        IDC_SCAN_START, 94, 40, 40, 14, ES_NUMBER | WS_BORDER | WS_TABSTOP
+    LTEXT           "and", IDC_SCAN_LABEL_AND, 138, 42, 16, 8
+    EDITTEXT        IDC_SCAN_END, 156, 40, 40, 14, ES_NUMBER | WS_BORDER | WS_TABSTOP
+    PUSHBUTTON      "Scan", IDC_SCAN_BTN, 380, 20, 72, 14
+    CONTROL         "", IDC_SCAN_PROGRESS, PROGRESS_CLASSW, WS_BORDER, 8, 60, 444, 10
+    LTEXT           "Note: Port scanning may be restricted or illegal in some countries. Only scan systems you have permission to test.", IDC_SCAN_WARNING, 8, 74, 444, 18
+    EDITTEXT        IDC_SCAN_OUTPUT, 8, 96, 444, 176, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_BORDER | WS_TABSTOP
+END
+
+IDD_SPEED DIALOGEX 0, 0, 460, 280
+STYLE DS_CONTROL | WS_CHILD | WS_TABSTOP
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Measure the latency, download and upload speed of your network connection.", IDC_SPEED_LABEL_INTRO, 8, 8, 440, 8
+    GROUPBOX        "Ping", IDC_SPEED_GROUP_PING, 8, 24, 140, 44
+    LTEXT           "-- ms", IDC_SPEED_PING, 12, 40, 132, 20, SS_CENTER
+    GROUPBOX        "Download", IDC_SPEED_GROUP_DOWN, 160, 24, 140, 44
+    LTEXT           "-- Mbps", IDC_SPEED_DOWN, 164, 40, 132, 20, SS_CENTER
+    GROUPBOX        "Upload", IDC_SPEED_GROUP_UP, 312, 24, 140, 44
+    LTEXT           "-- Mbps", IDC_SPEED_UP, 316, 40, 132, 20, SS_CENTER
+    LTEXT           "Ready.", IDC_SPEED_STATUS, 8, 80, 300, 10
+    CONTROL         "", IDC_SPEED_PROGRESS, PROGRESS_CLASSW, WS_BORDER, 8, 94, 444, 10
+    PUSHBUTTON      "Start Test", IDC_SPEED_BTN, 380, 8, 72, 14
+END
+
+/* Modal "Settings" dialog (Hilfe > Einstellungen), not a tab page - has a
+ * normal caption/border and is shown via DialogBoxParamW. */
+IDD_SETTINGS DIALOGEX 0, 0, 200, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Language", IDC_SETTINGS_LABEL_LANGUAGE, 8, 10, 60, 8
+    COMBOBOX        IDC_SETTINGS_LANG_COMBO, 8, 22, 184, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Close", IDC_SETTINGS_CLOSE, 128, 46, 64, 14
+END
