@@ -30,6 +30,7 @@
 #define IDD_PORTSCAN 17
 #define IDD_SPEED 18
 #define IDD_SETTINGS 19
+#define IDD_ABOUT 20
 
 /* Info tab */
 #define IDC_INFO_IFACE_COMBO 100
@@ -127,6 +128,15 @@
 #define IDC_SETTINGS_LABEL_LANGUAGE 950
 #define IDC_SETTINGS_LANG_COMBO 951
 #define IDC_SETTINGS_CLOSE 952
+
+/* About dialog */
+#define IDC_ABOUT_TITLE 960
+#define IDC_ABOUT_VERSION 961
+#define IDC_ABOUT_LICENSE_LABEL 962
+#define IDC_ABOUT_LICENSE_TEXT 963
+#define IDC_ABOUT_DISCLAIMER_TITLE 964
+#define IDC_ABOUT_DISCLAIMER_BODY 965
+#define IDC_ABOUT_CLOSE 966
 
 /* Worker-thread -> UI messages, WM_APP-based, one range per tab. */
 #define WM_APP_PING_LINE (WM_APP + 1)

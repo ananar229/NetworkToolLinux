@@ -12,6 +12,7 @@ add_definitions(-DUNICODE -D_UNICODE -DWINVER=0x0500 -D_WIN32_WINNT=0x0500 -D_WI
 add_executable(NetworkTool WIN32
     src/main.c
     src/MainWindow.c
+    src/AboutDialog.c
     src/SettingsDialog.c
     src/common/OutputEdit.c
     src/common/ResolveIPv4.c

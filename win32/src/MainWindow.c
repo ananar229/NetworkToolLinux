@@ -3,6 +3,7 @@
 #include <commctrl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "AboutDialog.h"
 #include "SettingsDialog.h"
 #include "common/Translations.h"
 #include "common/resource.h"
@@ -159,10 +160,8 @@ static void ShowHelp(HWND hWnd) {
 }
 
 static void ShowAbout(HWND hWnd) {
-    wchar_t body[2048];
-    swprintf(body, 2048, L"Network Tool\n%s\n%s\n\n%s:\n%s", T(STR_ABOUT_VERSION), T(STR_ABOUT_LICENSE),
-              T(STR_ABOUT_DISCLAIMER_TITLE), T(STR_ABOUT_DISCLAIMER_BODY));
-    MessageBoxW(hWnd, body, T(STR_ABOUT_TITLE), MB_OK | MB_ICONINFORMATION);
+    DialogBoxParamW((HINSTANCE)GetWindowLongPtrW(hWnd, GWLP_HINSTANCE), MAKEINTRESOURCEW(IDD_ABOUT), hWnd,
+                     AboutDialog_Proc, 0);
 }
 
 /* Built at runtime (rather than a static .rc MENU resource) so its text

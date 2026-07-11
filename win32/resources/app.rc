@@ -211,3 +211,21 @@ BEGIN
     COMBOBOX        IDC_SETTINGS_LANG_COMBO, 8, 22, 184, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Close", IDC_SETTINGS_CLOSE, 128, 46, 64, 14
 END
+
+/* Modal "About" dialog (Hilfe > Über), not a tab page - has a normal
+ * caption/border and is shown via DialogBoxParamW. Shows the full MIT
+ * license text (kept in English regardless of UI language) plus a
+ * translated disclaimer. */
+IDD_ABOUT DIALOGEX 0, 0, 260, 230
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_DLGMODALFRAME
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Network Tool", IDC_ABOUT_TITLE, 8, 8, 244, 10
+    LTEXT           "Version 1.1.0", IDC_ABOUT_VERSION, 8, 20, 244, 8
+    LTEXT           "License", IDC_ABOUT_LICENSE_LABEL, 8, 34, 244, 8
+    EDITTEXT        IDC_ABOUT_LICENSE_TEXT, 8, 44, 244, 92, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Disclaimer", IDC_ABOUT_DISCLAIMER_TITLE, 8, 140, 244, 8
+    EDITTEXT        IDC_ABOUT_DISCLAIMER_BODY, 8, 150, 244, 50, ES_MULTILINE | ES_READONLY | ES_AUTOVSCROLL | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "Close", IDC_ABOUT_CLOSE, 204, 208, 48, 14
+END

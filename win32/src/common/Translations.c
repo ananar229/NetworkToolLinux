@@ -59,8 +59,7 @@ static const TranslationEntry kTranslations[STR_COUNT] = {
                           L"Informazioni su Network Tool", L"Acerca de Network Tool"},
     [STR_ABOUT_VERSION] = {L"Version 1.1.0", L"Version 1.1.0", L"Version 1.1.0", L"Versione 1.1.0",
                             L"Versión 1.1.0"},
-    [STR_ABOUT_LICENSE] = {L"Lizenz: MIT", L"License: MIT", L"Licence : MIT", L"Licenza: MIT",
-                            L"Licencia: MIT"},
+    [STR_ABOUT_LICENSE] = {L"Lizenz", L"License", L"Licence", L"Licenza", L"Licencia"},
     [STR_ABOUT_DISCLAIMER_TITLE] = {L"Haftungsausschluss", L"Disclaimer", L"Clause de non-responsabilité",
                                      L"Esclusione di responsabilità", L"Descargo de responsabilidad"},
     [STR_ABOUT_DISCLAIMER_BODY] =
