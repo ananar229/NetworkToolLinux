@@ -19,6 +19,7 @@ add_executable(NetworkTool WIN32
     src/common/TcpQuery.c
     src/common/Translations.c
     src/common/OuiVendors.c
+    src/common/DialogResize.c
     src/tabs/InfoTab.c
     src/tabs/NetstatTab.c
     src/tabs/PingTab.c

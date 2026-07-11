@@ -1,15 +1,27 @@
 #include "LookupTab.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <windns.h>
 #include <windowsx.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/Translations.h"
 #include "common/resource.h"
+
+typedef struct {
+    DialogResizer *resizer;
+} LookupState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_LOOKUP_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_LOOKUP_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_LOOKUP_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 typedef struct {
     StringId label;
@@ -117,8 +129,12 @@ static void RunDnsQuery(HWND output, const wchar_t *address, WORD type) {
 }
 
 INT_PTR CALLBACK LookupTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    LookupState *state = (LookupState *)GetWindowLongPtrW(hDlg, DWLP_USER);
+
     switch (msg) {
         case WM_INITDIALOG: {
+            state = (LookupState *)calloc(1, sizeof(LookupState));
+            SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_LOOKUP_LABEL_ADDR, T(STR_LOOKUP_LABEL));
             SetDlgItemTextW(hDlg, IDC_LOOKUP_LABEL_TYPE, T(STR_LOOKUP_TYPELABEL));
             SetDlgItemTextW(hDlg, IDC_LOOKUP_BTN, T(STR_LOOKUP_BTN));
@@ -129,8 +145,15 @@ INT_PTR CALLBACK LookupTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM
                 ComboBox_SetItemData(combo, idx, kTypes[i].dnsType);
             }
             ComboBox_SetCurSel(combo, 0);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
             return TRUE;
         }
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
+            return TRUE;
 
         case WM_COMMAND:
             if (LOWORD(wParam) == IDC_LOOKUP_BTN) {
@@ -152,6 +175,14 @@ INT_PTR CALLBACK LookupTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM
                 } else {
                     RunDnsQuery(output, address, type);
                 }
+            }
+            return TRUE;
+
+        case WM_DESTROY:
+            if (state) {
+                DialogResize_Free(state->resizer);
+                free(state);
+                SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }
             return TRUE;
 

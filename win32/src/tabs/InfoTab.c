@@ -7,10 +7,30 @@
 #include <wchar.h>
 #include <windowsx.h>
 
+#include "common/DialogResize.h"
 #include "common/Translations.h"
 #include "common/resource.h"
 
 #define REFRESH_TIMER_ID 1
+
+typedef struct {
+    DialogResizer *resizer;
+} InfoState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_INFO_LABEL_SELECT, RESIZE_LEFT | RESIZE_TOP},
+    {IDC_INFO_IFACE_COMBO, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_INFO_GROUP_IFACE, RESIZE_LEFT | RESIZE_TOP},
+    {IDC_INFO_GROUP_STATS, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_LABEL_RXPACKETS, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_RXPACKETS, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_LABEL_RXERR, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_RXERR, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_LABEL_TXPACKETS, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_TXPACKETS, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_LABEL_TXERR, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_INFO_TXERR, RESIZE_RIGHT | RESIZE_TOP},
+};
 
 static void AnsiToWide(const char *ansi, wchar_t *out, int outCount) {
     if (!ansi || !*ansi) {
@@ -142,8 +162,12 @@ static void RefreshInfo(HWND hDlg) {
 }
 
 INT_PTR CALLBACK InfoTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    InfoState *state = (InfoState *)GetWindowLongPtrW(hDlg, DWLP_USER);
+
     switch (msg) {
         case WM_INITDIALOG:
+            state = (InfoState *)calloc(1, sizeof(InfoState));
+            SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_INFO_LABEL_SELECT, T(STR_INFO_SELECT));
             SetDlgItemTextW(hDlg, IDC_INFO_GROUP_IFACE, T(STR_INFO_GROUP_IFACE));
             SetDlgItemTextW(hDlg, IDC_INFO_LABEL_MAC, T(STR_INFO_MAC));
@@ -160,11 +184,18 @@ INT_PTR CALLBACK InfoTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
             PopulateInterfaces(hDlg);
             RefreshInfo(hDlg);
             SetTimer(hDlg, REFRESH_TIMER_ID, 2000, NULL);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
             return TRUE;
 
         case WM_TIMER:
             if (wParam == REFRESH_TIMER_ID) {
                 RefreshInfo(hDlg);
+            }
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
             }
             return TRUE;
 
@@ -176,6 +207,11 @@ INT_PTR CALLBACK InfoTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
         case WM_DESTROY:
             KillTimer(hDlg, REFRESH_TIMER_ID);
+            if (state) {
+                DialogResize_Free(state->resizer);
+                free(state);
+                SetWindowLongPtrW(hDlg, DWLP_USER, 0);
+            }
             return TRUE;
 
         default:

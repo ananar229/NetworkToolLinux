@@ -5,10 +5,21 @@
 #include <wchar.h>
 #include <windowsx.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/TcpQuery.h"
 #include "common/Translations.h"
 #include "common/resource.h"
+
+typedef struct {
+    DialogResizer *resizer;
+} WhoisState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_WHOIS_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_WHOIS_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_WHOIS_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 typedef struct {
     const wchar_t *server; /* NULL = automatic (referred via whois.iana.org) */
@@ -96,8 +107,12 @@ static void RunWhois(HWND hDlg) {
 }
 
 INT_PTR CALLBACK WhoisTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    WhoisState *state = (WhoisState *)GetWindowLongPtrW(hDlg, DWLP_USER);
+
     switch (msg) {
         case WM_INITDIALOG: {
+            state = (WhoisState *)calloc(1, sizeof(WhoisState));
+            SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_WHOIS_LABEL_ADDR, T(STR_WHOIS_LABEL));
             SetDlgItemTextW(hDlg, IDC_WHOIS_LABEL_SERVER, T(STR_WHOIS_SERVERLABEL));
             SetDlgItemTextW(hDlg, IDC_WHOIS_BTN, T(STR_WHOIS_BTN));
@@ -108,12 +123,27 @@ INT_PTR CALLBACK WhoisTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM 
                 ComboBox_AddString(combo, kServers[i].server);
             }
             ComboBox_SetCurSel(combo, 0);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
             return TRUE;
         }
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
+            return TRUE;
 
         case WM_COMMAND:
             if (LOWORD(wParam) == IDC_WHOIS_BTN) {
                 RunWhois(hDlg);
+            }
+            return TRUE;
+
+        case WM_DESTROY:
+            if (state) {
+                DialogResize_Free(state->resizer);
+                free(state);
+                SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }
             return TRUE;
 

@@ -3,16 +3,38 @@
 #include <stdlib.h>
 #include <wchar.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/TcpQuery.h"
 #include "common/Translations.h"
 #include "common/resource.h"
 
+typedef struct {
+    DialogResizer *resizer;
+} FingerState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_FINGER_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_FINGER_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_FINGER_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
+
 INT_PTR CALLBACK FingerTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    FingerState *state = (FingerState *)GetWindowLongPtrW(hDlg, DWLP_USER);
+
     switch (msg) {
         case WM_INITDIALOG:
+            state = (FingerState *)calloc(1, sizeof(FingerState));
+            SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_FINGER_LABEL_ADDR, T(STR_FINGER_LABEL));
             SetDlgItemTextW(hDlg, IDC_FINGER_BTN, T(STR_FINGER_BTN));
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -58,6 +80,14 @@ INT_PTR CALLBACK FingerTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM
                 } else {
                     OutputEdit_AppendLine(output, errorMsg);
                 }
+            }
+            return TRUE;
+
+        case WM_DESTROY:
+            if (state) {
+                DialogResize_Free(state->resizer);
+                free(state);
+                SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }
             return TRUE;
 

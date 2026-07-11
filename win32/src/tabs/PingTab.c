@@ -8,6 +8,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/ResolveIPv4.h"
 #include "common/Translations.h"
@@ -16,7 +17,14 @@
 typedef struct {
     HANDLE hThread;
     volatile LONG stopRequested;
+    DialogResizer *resizer;
 } PingState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_PING_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_PING_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_PING_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 typedef struct {
     HWND hDlg;
@@ -137,6 +145,13 @@ INT_PTR CALLBACK PingTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
             SetDlgItemTextW(hDlg, IDC_PING_LIMIT_CHK, T(STR_PING_SENDONLY));
             SetDlgItemTextW(hDlg, IDC_PING_LABEL_PINGS, T(STR_PING_PINGS));
             SetDlgItemTextW(hDlg, IDC_PING_COUNT, L"10");
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -172,6 +187,7 @@ INT_PTR CALLBACK PingTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
                     WaitForSingleObject(state->hThread, 2000);
                     CloseHandle(state->hThread);
                 }
+                DialogResize_Free(state->resizer);
                 free(state);
                 SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }

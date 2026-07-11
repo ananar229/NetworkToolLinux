@@ -7,6 +7,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/ResolveIPv4.h"
 #include "common/Translations.h"
@@ -29,7 +30,16 @@ typedef struct {
 typedef struct {
     HANDLE hCoordinatorThread;
     volatile LONG stopRequested;
+    DialogResizer *resizer;
 } PortScanState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_SCAN_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_SCAN_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_SCAN_PROGRESS, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_SCAN_WARNING, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_SCAN_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 static BOOL TryConnect(DWORD addr, unsigned short port, DWORD timeoutMs) {
     SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -172,6 +182,13 @@ INT_PTR CALLBACK PortScanTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPAR
             SetDlgItemTextW(hDlg, IDC_SCAN_WARNING, T(STR_SCAN_WARNING));
             SetDlgItemTextW(hDlg, IDC_SCAN_START, L"1");
             SetDlgItemTextW(hDlg, IDC_SCAN_END, L"1024");
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -218,6 +235,7 @@ INT_PTR CALLBACK PortScanTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPAR
                     WaitForSingleObject(state->hCoordinatorThread, 4000);
                     CloseHandle(state->hCoordinatorThread);
                 }
+                DialogResize_Free(state->resizer);
                 free(state);
                 SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }

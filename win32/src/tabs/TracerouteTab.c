@@ -8,6 +8,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/ResolveIPv4.h"
 #include "common/Translations.h"
@@ -18,7 +19,14 @@
 typedef struct {
     HANDLE hThread;
     volatile LONG stopRequested;
+    DialogResizer *resizer;
 } TraceState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_TRACE_ADDR, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_TRACE_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_TRACE_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 typedef struct {
     HWND hDlg;
@@ -137,6 +145,13 @@ INT_PTR CALLBACK TracerouteTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LP
             SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_TRACE_LABEL_ADDR, T(STR_TRACE_LABEL));
             SetDlgItemTextW(hDlg, IDC_TRACE_BTN, T(STR_TRACE_BTN));
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -177,6 +192,7 @@ INT_PTR CALLBACK TracerouteTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LP
                     WaitForSingleObject(state->hThread, 4000);
                     CloseHandle(state->hThread);
                 }
+                DialogResize_Free(state->resizer);
                 free(state);
                 SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }

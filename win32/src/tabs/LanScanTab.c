@@ -13,6 +13,7 @@
 #include <wchar.h>
 #include <windowsx.h>
 
+#include "common/DialogResize.h"
 #include "common/OuiVendors.h"
 #include "common/Translations.h"
 #include "common/resource.h"
@@ -33,7 +34,15 @@ typedef struct {
 typedef struct {
     HANDLE hCoordinatorThread;
     volatile LONG stopRequested;
+    DialogResizer *resizer;
 } LanScanState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_LANSCAN_IFACE_COMBO, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_LANSCAN_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_LANSCAN_PROGRESS, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_LANSCAN_LIST, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 typedef struct {
     wchar_t ip[16];
@@ -358,6 +367,13 @@ INT_PTR CALLBACK LanScanTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARA
             SetDlgItemTextW(hDlg, IDC_LANSCAN_BTN, T(STR_LANSCAN_BTN));
             SetupListView(hDlg);
             PopulateInterfaces(hDlg);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -456,6 +472,7 @@ INT_PTR CALLBACK LanScanTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARA
                     WaitForSingleObject(state->hCoordinatorThread, 4000);
                     CloseHandle(state->hCoordinatorThread);
                 }
+                DialogResize_Free(state->resizer);
                 free(state);
                 SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }

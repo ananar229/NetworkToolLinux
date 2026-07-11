@@ -252,6 +252,20 @@ static LRESULT CALLBACK MainWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
             }
             return 0;
 
+        case WM_GETMINMAXINFO: {
+            /* Keeps the window from being shrunk below the size the tab
+             * pages were actually designed for (460x280 dialog units'
+             * worth of controls, plus the tab strip's own chrome) - without
+             * this, controls would get clipped rather than reflowed. */
+            MINMAXINFO *mmi = (MINMAXINFO *)lParam;
+            RECT rc = {0, 0, 480, 340};
+            AdjustWindowRectEx(&rc, (DWORD)GetWindowLongPtrW(hWnd, GWL_STYLE), TRUE,
+                                (DWORD)GetWindowLongPtrW(hWnd, GWL_EXSTYLE));
+            mmi->ptMinTrackSize.x = rc.right - rc.left;
+            mmi->ptMinTrackSize.y = rc.bottom - rc.top;
+            return 0;
+        }
+
         case WM_NOTIFY: {
             LPNMHDR hdr = (LPNMHDR)lParam;
             if (state && hdr->hwndFrom == state->hTabControl && hdr->code == TCN_SELCHANGE) {

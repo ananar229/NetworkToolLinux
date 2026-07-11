@@ -6,9 +6,19 @@
 #include <string.h>
 #include <winsock2.h>
 
+#include "common/DialogResize.h"
 #include "common/OutputEdit.h"
 #include "common/Translations.h"
 #include "common/resource.h"
+
+typedef struct {
+    DialogResizer *resizer;
+} NetstatState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_NET_RUN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_NET_OUTPUT, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT | RESIZE_BOTTOM},
+};
 
 static const wchar_t *TcpStateName(DWORD state) {
     switch (state) {
@@ -160,13 +170,24 @@ static void RunActiveConnections(HWND output) {
 }
 
 INT_PTR CALLBACK NetstatTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    NetstatState *state = (NetstatState *)GetWindowLongPtrW(hDlg, DWLP_USER);
+
     switch (msg) {
         case WM_INITDIALOG:
+            state = (NetstatState *)calloc(1, sizeof(NetstatState));
+            SetWindowLongPtrW(hDlg, DWLP_USER, (LONG_PTR)state);
             SetDlgItemTextW(hDlg, IDC_NET_RADIO_ROUTE, T(STR_NET_ROUTE));
             SetDlgItemTextW(hDlg, IDC_NET_RADIO_STATS, T(STR_NET_STATS));
             SetDlgItemTextW(hDlg, IDC_NET_RADIO_CONN, T(STR_NET_CONN));
             SetDlgItemTextW(hDlg, IDC_NET_RUN, T(STR_NET_BTN));
             CheckRadioButton(hDlg, IDC_NET_RADIO_ROUTE, IDC_NET_RADIO_CONN, IDC_NET_RADIO_ROUTE);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -180,6 +201,14 @@ INT_PTR CALLBACK NetstatTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARA
                 } else {
                     RunActiveConnections(output);
                 }
+            }
+            return TRUE;
+
+        case WM_DESTROY:
+            if (state) {
+                DialogResize_Free(state->resizer);
+                free(state);
+                SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }
             return TRUE;
 

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <winhttp.h>
 
+#include "common/DialogResize.h"
 #include "common/Translations.h"
 #include "common/resource.h"
 
@@ -31,7 +32,14 @@
 typedef struct {
     HANDLE hThread;
     volatile LONG stopRequested;
+    DialogResizer *resizer;
 } SpeedState;
+
+static const ResizeAnchor kAnchors[] = {
+    {IDC_SPEED_LABEL_INTRO, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+    {IDC_SPEED_BTN, RESIZE_RIGHT | RESIZE_TOP},
+    {IDC_SPEED_PROGRESS, RESIZE_LEFT | RESIZE_TOP | RESIZE_RIGHT},
+};
 
 typedef struct {
     HWND hDlg;
@@ -197,6 +205,13 @@ INT_PTR CALLBACK SpeedTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM 
             SetDlgItemTextW(hDlg, IDC_SPEED_DOWN, T(STR_SPEED_DASH_MBPS));
             SetDlgItemTextW(hDlg, IDC_SPEED_UP, T(STR_SPEED_DASH_MBPS));
             SendMessageW(GetDlgItem(hDlg, IDC_SPEED_PROGRESS), PBM_SETRANGE32, 0, 100);
+            state->resizer = DialogResize_Init(hDlg, kAnchors, (int)(sizeof(kAnchors) / sizeof(kAnchors[0])));
+            return TRUE;
+
+        case WM_SIZE:
+            if (state) {
+                DialogResize_Apply(state->resizer, LOWORD(lParam), HIWORD(lParam));
+            }
             return TRUE;
 
         case WM_COMMAND:
@@ -258,6 +273,7 @@ INT_PTR CALLBACK SpeedTab_DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM 
                     WaitForSingleObject(state->hThread, 4000);
                     CloseHandle(state->hThread);
                 }
+                DialogResize_Free(state->resizer);
                 free(state);
                 SetWindowLongPtrW(hDlg, DWLP_USER, 0);
             }
