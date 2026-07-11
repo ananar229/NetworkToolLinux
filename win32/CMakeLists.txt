@@ -18,6 +18,7 @@ add_executable(NetworkTool WIN32
     src/common/ResolveIPv4.c
     src/common/TcpQuery.c
     src/common/Translations.c
+    src/common/OuiVendors.c
     src/tabs/InfoTab.c
     src/tabs/NetstatTab.c
     src/tabs/PingTab.c
@@ -27,6 +28,7 @@ add_executable(NetworkTool WIN32
     src/tabs/FingerTab.c
     src/tabs/PortScanTab.c
     src/tabs/SpeedTab.c
+    src/tabs/LanScanTab.c
     resources/app.rc
 )
 

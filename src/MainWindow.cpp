@@ -4,6 +4,7 @@
 #include "SettingsDialog.h"
 #include "tabs/FingerTab.h"
 #include "tabs/InfoTab.h"
+#include "tabs/LanScanTab.h"
 #include "tabs/LookupTab.h"
 #include "tabs/NetstatTab.h"
 #include "tabs/PingTab.h"
@@ -47,6 +48,7 @@ constexpr TabSpec kTabSpecs[] = {
     {"Finger", QStyle::SP_DialogHelpButton},
     {"Port Scan", QStyle::SP_DriveHDIcon},
     {"Speed", QStyle::SP_MediaSeekForward},
+    {"LAN Scan", QStyle::SP_ComputerIcon},
 };
 
 enum class EditOp { Undo, Redo, Cut, Copy, Paste, Delete, SelectAll };
@@ -134,6 +136,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     m_stack->addWidget(new FingerTab());
     m_stack->addWidget(new PortScanTab());
     m_stack->addWidget(new SpeedTestTab());
+    m_stack->addWidget(new LanScanTab());
     outerLayout->addWidget(m_stack, 1);
 
     connect(segmentGroup, &QButtonGroup::idClicked, m_stack, &QStackedWidget::setCurrentIndex);
@@ -287,9 +290,9 @@ void MainWindow::setupMenuBar() {
         QMessageBox::information(
             this, tr("Hilfe"),
             tr("Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, "
-               "Traceroute, Whois, Finger, Port Scan, Speed), gib die benötigten Angaben "
-               "ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe erscheint "
-               "im Textfeld darunter."));
+               "Traceroute, Whois, Finger, Port Scan, Speed, LAN Scan), gib die benötigten "
+               "Angaben ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe "
+               "erscheint im Textfeld darunter."));
     });
 
     QAction *aboutAction = helpMenu->addAction(tr("Über"));

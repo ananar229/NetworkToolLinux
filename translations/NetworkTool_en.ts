@@ -4,27 +4,31 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../src/AboutDialog.cpp" line="10"/>
+        <location filename="../src/AboutDialog.cpp" line="36"/>
         <source>Über %1</source>
         <translation>About %1</translation>
     </message>
     <message>
-        <location filename="../src/AboutDialog.cpp" line="21"/>
+        <location filename="../src/AboutDialog.cpp" line="47"/>
         <source>Version %1</source>
         <translation>Version %1</translation>
     </message>
     <message>
-        <location filename="../src/AboutDialog.cpp" line="24"/>
-        <source>Lizenz: MIT</source>
-        <translation>License: MIT</translation>
+        <location filename="../src/AboutDialog.cpp" line="50"/>
+        <source>Lizenz</source>
+        <translation>License</translation>
     </message>
     <message>
-        <location filename="../src/AboutDialog.cpp" line="32"/>
+        <source>Lizenz: MIT</source>
+        <translation type="vanished">License: MIT</translation>
+    </message>
+    <message>
+        <location filename="../src/AboutDialog.cpp" line="69"/>
         <source>Haftungsausschluss</source>
         <translation>Disclaimer</translation>
     </message>
     <message>
-        <location filename="../src/AboutDialog.cpp" line="36"/>
+        <location filename="../src/AboutDialog.cpp" line="73"/>
         <source>Diese Software wird ohne jegliche Garantie oder Gewährleistung bereitgestellt, weder ausdrücklich noch stillschweigend, einschließlich, aber nicht beschränkt auf die Gewährleistung der Marktgängigkeit, der Eignung für einen bestimmten Zweck und der Nichtverletzung von Rechten Dritter. Die Nutzung erfolgt auf eigenes Risiko. Der Autor übernimmt keine Haftung für Schäden oder Folgeschäden, die durch die Nutzung oder Unmöglichkeit der Nutzung dieser Software entstehen, und lehnt jegliche Haftung ab.</source>
         <translation>This software is provided without any warranty or guarantee of any kind, whether express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement of third-party rights. Use is at your own risk. The author accepts no liability for any damages or consequential damages arising from the use or inability to use this software, and disclaims all liability.</translation>
     </message>
@@ -187,6 +191,83 @@
     </message>
 </context>
 <context>
+    <name>LanScanTab</name>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="44"/>
+        <source>Network interface to scan:</source>
+        <translation>Network interface to scan:</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="53"/>
+        <location filename="../src/tabs/LanScanTab.cpp" line="360"/>
+        <source>Scan</source>
+        <translation>Scan</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="59"/>
+        <source>IPv4 Address</source>
+        <translation>IPv4 Address</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="59"/>
+        <source>Hostname</source>
+        <translation>Hostname</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="59"/>
+        <source>Ping</source>
+        <translation>Ping</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="59"/>
+        <source>IPv6 Address (Local)</source>
+        <translation>IPv6 Address (Local)</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="60"/>
+        <source>IPv6 Address (Global)</source>
+        <translation>IPv6 Address (Global)</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="60"/>
+        <source>MAC Address</source>
+        <translation>MAC Address</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="60"/>
+        <source>Vendor</source>
+        <translation>Vendor</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="144"/>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="226"/>
+        <location filename="../src/tabs/LanScanTab.cpp" line="233"/>
+        <location filename="../src/tabs/LanScanTab.cpp" line="234"/>
+        <location filename="../src/tabs/LanScanTab.cpp" line="254"/>
+        <source>--</source>
+        <translation>--</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="229"/>
+        <source>Reachable</source>
+        <translation>Reachable</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="229"/>
+        <source>No Reply</source>
+        <translation>No Reply</translation>
+    </message>
+    <message>
+        <location filename="../src/tabs/LanScanTab.cpp" line="238"/>
+        <source>Unknown</source>
+        <translation>Unknown</translation>
+    </message>
+</context>
+<context>
     <name>LookupTab</name>
     <message>
         <location filename="../src/tabs/LookupTab.cpp" line="18"/>
@@ -271,94 +352,98 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/MainWindow.cpp" line="89"/>
+        <location filename="../src/MainWindow.cpp" line="91"/>
         <source>Network Tool</source>
         <translation>Network Tool</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="215"/>
+        <location filename="../src/MainWindow.cpp" line="218"/>
         <source>Ablage</source>
         <translation>File</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="217"/>
+        <location filename="../src/MainWindow.cpp" line="220"/>
         <source>Neues Fenster</source>
         <translation>New Window</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="225"/>
+        <location filename="../src/MainWindow.cpp" line="228"/>
         <source>Schliessen</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="229"/>
+        <location filename="../src/MainWindow.cpp" line="232"/>
         <source>Bearbeiten</source>
         <translation>Edit</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="231"/>
+        <location filename="../src/MainWindow.cpp" line="234"/>
         <source>Widerrufen</source>
         <translation>Undo</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="235"/>
+        <location filename="../src/MainWindow.cpp" line="238"/>
         <source>Wiederholen</source>
         <translation>Redo</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="241"/>
+        <location filename="../src/MainWindow.cpp" line="244"/>
         <source>Ausschneiden</source>
         <translation>Cut</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="245"/>
+        <location filename="../src/MainWindow.cpp" line="248"/>
         <source>Kopieren</source>
         <translation>Copy</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="249"/>
+        <location filename="../src/MainWindow.cpp" line="252"/>
         <source>Einfügen</source>
         <translation>Paste</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="253"/>
+        <location filename="../src/MainWindow.cpp" line="256"/>
         <source>Löschen</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="257"/>
+        <location filename="../src/MainWindow.cpp" line="260"/>
         <source>Alles Auswählen</source>
         <translation>Select All</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="261"/>
+        <location filename="../src/MainWindow.cpp" line="264"/>
         <source>Darstellung</source>
         <translation>View</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="263"/>
+        <location filename="../src/MainWindow.cpp" line="266"/>
         <source>Vollbildmodus</source>
         <translation>Full Screen</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="274"/>
-        <location filename="../src/MainWindow.cpp" line="284"/>
-        <location filename="../src/MainWindow.cpp" line="288"/>
+        <location filename="../src/MainWindow.cpp" line="277"/>
+        <location filename="../src/MainWindow.cpp" line="287"/>
+        <location filename="../src/MainWindow.cpp" line="291"/>
         <source>Hilfe</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="276"/>
+        <location filename="../src/MainWindow.cpp" line="279"/>
         <source>Einstellungen</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="289"/>
-        <source>Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed), gib die benötigten Angaben ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe erscheint im Textfeld darunter.</source>
-        <translation>Choose a tool from the bar above (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed), enter the required details, and start the action with the corresponding button. The output appears in the text field below.</translation>
+        <location filename="../src/MainWindow.cpp" line="292"/>
+        <source>Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed, LAN Scan), gib die benötigten Angaben ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe erscheint im Textfeld darunter.</source>
+        <translation>Choose a tool from the bar above (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed, LAN Scan), enter the required details, and start the action with the corresponding button. The output appears in the text field below.</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="295"/>
+        <source>Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed), gib die benötigten Angaben ein und starte die Aktion über den jeweiligen Knopf. Die Ausgabe erscheint im Textfeld darunter.</source>
+        <translation type="vanished">Choose a tool from the bar above (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, Speed), enter the required details, and start the action with the corresponding button. The output appears in the text field below.</translation>
+    </message>
+    <message>
+        <location filename="../src/MainWindow.cpp" line="298"/>
         <source>Über</source>
         <translation>About</translation>
     </message>

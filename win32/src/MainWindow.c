@@ -9,6 +9,7 @@
 #include "common/resource.h"
 #include "tabs/FingerTab.h"
 #include "tabs/InfoTab.h"
+#include "tabs/LanScanTab.h"
 #include "tabs/LookupTab.h"
 #include "tabs/NetstatTab.h"
 #include "tabs/PingTab.h"
@@ -35,6 +36,7 @@ static const TabSpec kTabs[] = {
     {L"Finger", IDD_FINGER, FingerTab_DialogProc},
     {L"Port Scan", IDD_PORTSCAN, PortScanTab_DialogProc},
     {L"Speed", IDD_SPEED, SpeedTab_DialogProc},
+    {L"LAN Scan", IDD_LANSCAN, LanScanTab_DialogProc},
 };
 #define TAB_COUNT (int)(sizeof(kTabs) / sizeof(kTabs[0]))
 

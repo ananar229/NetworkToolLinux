@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(NetworkTool VERSION 1.1.0 LANGUAGES CXX)
+project(NetworkTool VERSION 1.5.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,6 +30,8 @@ add_executable(NetworkTool
     src/common/NativeTraceroute.cpp
     src/common/ProcNetInfo.h
     src/common/ProcNetInfo.cpp
+    src/common/OuiVendors.h
+    src/common/OuiVendors.cpp
     src/tabs/InfoTab.h
     src/tabs/InfoTab.cpp
     src/tabs/NetstatTab.h
@@ -48,6 +50,8 @@ add_executable(NetworkTool
     src/tabs/PortScanTab.cpp
     src/tabs/SpeedTestTab.h
     src/tabs/SpeedTestTab.cpp
+    src/tabs/LanScanTab.h
+    src/tabs/LanScanTab.cpp
     resources/icons.qrc
 )
 

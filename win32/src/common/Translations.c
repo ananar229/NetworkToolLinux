@@ -41,24 +41,24 @@ static const TranslationEntry kTranslations[STR_COUNT] = {
     [STR_HELP_TITLE] = {L"Hilfe", L"Help", L"Aide", L"Aiuto", L"Ayuda"},
     [STR_HELP_BODY] =
         {L"Wähle oben in der Leiste ein Werkzeug aus (Info, Netstat, Ping, Lookup, Traceroute, Whois, "
-         L"Finger, Port Scan, Speed), gib die benötigten Angaben ein und starte die Aktion über den "
+         L"Finger, Port Scan, Speed, LAN Scan), gib die benötigten Angaben ein und starte die Aktion über den "
          L"jeweiligen Knopf. Die Ausgabe erscheint im Textfeld darunter.",
          L"Choose a tool from the bar above (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, Port Scan, "
-         L"Speed), enter the required details, and start the action with the corresponding button. The output "
-         L"appears in the text field below.",
+         L"Speed, LAN Scan), enter the required details, and start the action with the corresponding button. "
+         L"The output appears in the text field below.",
          L"Choisissez un outil dans la barre ci-dessus (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, "
-         L"Port Scan, Speed), saisissez les informations nécessaires et démarrez l'action avec le "
+         L"Port Scan, Speed, LAN Scan), saisissez les informations nécessaires et démarrez l'action avec le "
          L"bouton correspondant. Le résultat s'affiche dans le champ de texte ci-dessous.",
          L"Scegli uno strumento dalla barra in alto (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, "
-         L"Port Scan, Speed), inserisci i dati richiesti e avvia l'azione con il pulsante corrispondente. "
-         L"L'output viene visualizzato nel campo di testo sottostante.",
+         L"Port Scan, Speed, LAN Scan), inserisci i dati richiesti e avvia l'azione con il pulsante "
+         L"corrispondente. L'output viene visualizzato nel campo di testo sottostante.",
          L"Elige una herramienta en la barra superior (Info, Netstat, Ping, Lookup, Traceroute, Whois, Finger, "
-         L"Port Scan, Speed), introduce los datos necesarios e inicia la acción con el botón "
+         L"Port Scan, Speed, LAN Scan), introduce los datos necesarios e inicia la acción con el botón "
          L"correspondiente. La salida aparece en el campo de texto de abajo."},
     [STR_ABOUT_TITLE] = {L"Über Network Tool", L"About Network Tool", L"À propos de Network Tool",
                           L"Informazioni su Network Tool", L"Acerca de Network Tool"},
-    [STR_ABOUT_VERSION] = {L"Version 1.1.0", L"Version 1.1.0", L"Version 1.1.0", L"Versione 1.1.0",
-                            L"Versión 1.1.0"},
+    [STR_ABOUT_VERSION] = {L"Version 1.5.0", L"Version 1.5.0", L"Version 1.5.0", L"Versione 1.5.0",
+                            L"Versión 1.5.0"},
     [STR_ABOUT_LICENSE] = {L"Lizenz", L"License", L"Licence", L"Licenza", L"Licencia"},
     [STR_ABOUT_DISCLAIMER_TITLE] = {L"Haftungsausschluss", L"Disclaimer", L"Clause de non-responsabilité",
                                      L"Esclusione di responsabilità", L"Descargo de responsabilidad"},
@@ -410,6 +410,26 @@ static const TranslationEntry kTranslations[STR_COUNT] = {
          L"ahora?"},
     [STR_SETTINGS_SYSTEM_LANG] = {L"Systemsprache", L"System language", L"Langue du système",
                                    L"Lingua di sistema", L"Idioma del sistema"},
+
+    [STR_LANSCAN_LABEL_IFACE] = {L"Zu scannende Netzwerkschnittstelle:", L"Network interface to scan:",
+                                  L"Interface réseau à analyser :", L"Interfaccia di rete da scansionare:",
+                                  L"Interfaz de red a escanear:"},
+    [STR_LANSCAN_BTN] = {L"Scannen", L"Scan", L"Analyser", L"Scansiona", L"Escanear"},
+    [STR_LANSCAN_STOP] = {L"Stopp", L"Stop", L"Arrêter", L"Interrompi", L"Detener"},
+    [STR_LANSCAN_COL_IPV4] = {L"IPv4-Adresse", L"IPv4 Address", L"Adresse IPv4", L"Indirizzo IPv4",
+                               L"Dirección IPv4"},
+    [STR_LANSCAN_COL_HOSTNAME] = {L"Hostname", L"Hostname", L"Nom d'hôte", L"Nome host", L"Nombre de host"},
+    [STR_LANSCAN_COL_PING] = {L"Ping", L"Ping", L"Ping", L"Ping", L"Ping"},
+    [STR_LANSCAN_COL_IPV6LOCAL] = {L"IPv6-Adresse (lokal)", L"IPv6 Address (Local)", L"Adresse IPv6 (locale)",
+                                    L"Indirizzo IPv6 (locale)", L"Dirección IPv6 (local)"},
+    [STR_LANSCAN_COL_IPV6GLOBAL] = {L"IPv6-Adresse (global)", L"IPv6 Address (Global)", L"Adresse IPv6 (globale)",
+                                     L"Indirizzo IPv6 (globale)", L"Dirección IPv6 (global)"},
+    [STR_LANSCAN_COL_MAC] = {L"MAC-Adresse", L"MAC Address", L"Adresse MAC", L"Indirizzo MAC", L"Dirección MAC"},
+    [STR_LANSCAN_COL_VENDOR] = {L"Hersteller", L"Vendor", L"Fabricant", L"Produttore", L"Fabricante"},
+    [STR_LANSCAN_REACHABLE] = {L"Erreichbar", L"Reachable", L"Joignable", L"Raggiungibile", L"Accesible"},
+    [STR_LANSCAN_NOREPLY] = {L"Keine Antwort", L"No Reply", L"Aucune réponse", L"Nessuna risposta", L"Sin respuesta"},
+    [STR_LANSCAN_UNKNOWN] = {L"Unbekannt", L"Unknown", L"Inconnu", L"Sconosciuto", L"Desconocido"},
+    [STR_LANSCAN_NONE] = {L"--", L"--", L"--", L"--", L"--"},
 };
 
 static LanguageId g_currentLanguage = LANG_EN;

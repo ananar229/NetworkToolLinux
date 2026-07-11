@@ -31,6 +31,7 @@
 #define IDD_SPEED 18
 #define IDD_SETTINGS 19
 #define IDD_ABOUT 20
+#define IDD_LANSCAN 21
 
 /* Info tab */
 #define IDC_INFO_IFACE_COMBO 100
@@ -138,6 +139,13 @@
 #define IDC_ABOUT_DISCLAIMER_BODY 965
 #define IDC_ABOUT_CLOSE 966
 
+/* LAN Scan tab */
+#define IDC_LANSCAN_LABEL_IFACE 1100
+#define IDC_LANSCAN_IFACE_COMBO 1101
+#define IDC_LANSCAN_BTN 1102
+#define IDC_LANSCAN_PROGRESS 1103
+#define IDC_LANSCAN_LIST 1104
+
 /* Worker-thread -> UI messages, WM_APP-based, one range per tab. */
 #define WM_APP_PING_LINE (WM_APP + 1)
 #define WM_APP_PING_DONE (WM_APP + 2)
@@ -150,3 +158,7 @@
 #define WM_APP_TEXT_DONE (WM_APP + 9)
 #define WM_APP_SPEED_UPDATE (WM_APP + 10)
 #define WM_APP_SPEED_DONE (WM_APP + 11)
+#define WM_APP_LANSCAN_HOST (WM_APP + 12)
+#define WM_APP_LANSCAN_PROGRESS (WM_APP + 13)
+#define WM_APP_LANSCAN_DONE (WM_APP + 14)
+#define WM_APP_LANSCAN_IPV6 (WM_APP + 15)
