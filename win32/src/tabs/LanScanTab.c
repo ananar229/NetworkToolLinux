@@ -58,8 +58,13 @@ typedef struct {
     wchar_t global[256];
 } LanScanIpv6Result;
 
+/* GetIpNetTable2/MIB_IPNET_TABLE2 (Vista+) aren't declared by ReactOS's SDK
+ * headers, and per the comment below ReactOS's iphlpapi.dll doesn't export
+ * the function either, so the lookup below is compiled out entirely there. */
+#ifndef __REACTOS__
 typedef NETIO_STATUS(WINAPI *GetIpNetTable2Func)(ADDRESS_FAMILY, PMIB_IPNET_TABLE2 *);
 typedef VOID(WINAPI *FreeMibTableFunc)(PVOID);
+#endif
 
 static void FormatMac(wchar_t *out, size_t outSize, const BYTE mac[6]) {
     swprintf(out, outSize, L"%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
@@ -72,6 +77,11 @@ static void FormatMac(wchar_t *out, size_t outSize, const BYTE mac[6]) {
  * does nothing if GetIpNetTable2 isn't available (pre-Vista Windows, and
  * likely ReactOS, whose iphlpapi.dll doesn't export it). */
 static void PostIpv6Neighbors(HWND hDlg, volatile LONG *stopFlag) {
+#ifdef __REACTOS__
+    (void)hDlg;
+    (void)stopFlag;
+    return;
+#else
     HMODULE hIphlpapi = GetModuleHandleW(L"iphlpapi.dll");
     if (!hIphlpapi) {
         return;
@@ -142,6 +152,7 @@ static void PostIpv6Neighbors(HWND hDlg, volatile LONG *stopFlag) {
 
     free(groups);
     pFreeMibTable(table);
+#endif
 }
 
 static DWORD WINAPI ScanWorker(LPVOID param) {
@@ -169,9 +180,10 @@ static DWORD WINAPI ScanWorker(LPVOID param) {
             pingOk = (ret > 0);
         }
 
-        BYTE mac[6] = {0};
+        ULONG macBuf[2] = {0};
         ULONG macLen = 6;
-        if (SendARP(destAddr, 0, mac, &macLen) == NO_ERROR && macLen == 6 &&
+        const BYTE *mac = (const BYTE *)macBuf;
+        if (SendARP(destAddr, 0, macBuf, &macLen) == NO_ERROR && macLen == 6 &&
             !(mac[0] == 0 && mac[1] == 0 && mac[2] == 0 && mac[3] == 0 && mac[4] == 0 && mac[5] == 0)) {
             LanScanHostResult *result = (LanScanHostResult *)calloc(1, sizeof(LanScanHostResult));
             struct in_addr a;

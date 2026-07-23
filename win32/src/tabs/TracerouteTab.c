@@ -1,12 +1,15 @@
 #include "TracerouteTab.h"
 
+/* winsock2.h/ws2tcpip.h must precede icmpapi.h: on ReactOS, icmpapi.h uses
+ * struct sockaddr_in6 without declaring it itself. */
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
 #include <ipexport.h>
 #include <icmpapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 
 #include "common/DialogResize.h"
 #include "common/OutputEdit.h"
